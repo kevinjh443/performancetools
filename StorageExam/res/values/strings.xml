@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">storage exam</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="create_fragmentation_test">create files</string>
+    <string name="delete_fragmentation_test">delete files</string>
+    <string name="exam_intr">此工具用於在sdcard目錄下產生大量1KB-2MB不等的隨機文件，
+        然後刪除他們，循環此步驟，在手機中產生大量存儲設備碎片。\n
+        步驟：\n
+        1，選定填充比例；\n
+        2，“create files” \n
+        3，“delete files” \n\n</string>
+    
+
+</resources>
