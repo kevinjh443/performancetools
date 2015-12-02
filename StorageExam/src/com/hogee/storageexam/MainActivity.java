@@ -57,6 +57,8 @@ public class MainActivity extends Activity {
     private volatile long  mAvailCountTemp = 0;
     /** the proportion of need fill data (for available storage) */
     private int mFillScale = 0;
+    /** recode the start time  */
+    private long mStartTime = 0;
     
     private static final int CASE_CHECK_AVAIL = 0;
     private static final int CASE_CONTINUE_WRITE = 1;
@@ -110,6 +112,7 @@ public class MainActivity extends Activity {
     private void initIntr() {
         mDetailTextView.setText(R.string.exam_intr);
         mAvailCountTemp = 0;
+        mStartTime = System.currentTimeMillis();
         initSDCardState();
     }
     
@@ -339,10 +342,20 @@ public class MainActivity extends Activity {
                 double proportion = (double)mAvailCountTemp / (double)mAvailCount;
                 proportion = proportion * 100;
                 Log.d(TAG, "proportion = "+Double.toString(proportion));
+                long useTimeTemp = System.currentTimeMillis() - mStartTime;//ms
+                useTimeTemp = useTimeTemp / 1000;//sec
+                long createSize = mAvailCountTemp / 1048576; //MB
+                
                 //2.update the UI show information
                 mResultTextView.setText("fill:"+String.format("%.2f", proportion)+" % \n");
                 mResultTextView.append("產生文件：  "+mFileCounter+"  個 \n");
-                mResultTextView.append("產生大小：  "+ (mAvailCountTemp/1048576) +"  MB");
+                mResultTextView.append("產生大小：  "+ createSize +"  MB \n");
+                mResultTextView.append("所用时间：  "+ useTimeTemp +"  sec \n");
+                if (0 == useTimeTemp) {
+                    mResultTextView.append("当前写入速度约：  ---  MB/sec \n");
+                } else {
+                    mResultTextView.append("平均写入速度约：  "+ (createSize/useTimeTemp) +"  MB/sec \n");
+                }
                 mProgressView.setProgress((int)proportion);
                 //3. operation of fill files
                 if (proportion < (double)mFillScale) {
@@ -351,6 +364,7 @@ public class MainActivity extends Activity {
                 } else {
                     isLoopNeeded = false;
                     mResultTextView.append("\n\n DONE!!!!!!");
+                    initIntr();
                     //mHandler.sendEmptyMessageDelayed(CASE_BREAK_WRITE, 200);
                 }
                 break;
@@ -374,6 +388,7 @@ public class MainActivity extends Activity {
                 break;
                 
             case CASE_DELETE_FILES_DONE:
+                initIntr();
                 mProgressView.setProgress(0);
                 mResultTextView.setText("delete file: "+mFileCounter);
                 mResultTextView.append("\n\n DONE!!!!");
