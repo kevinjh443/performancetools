@@ -13,7 +13,7 @@
     <ScrollView
         android:id="@+id/result_show_scroll"
 		android:layout_width="fill_parent"
-		android:layout_height="200dp" >
+		android:layout_height="220dp" >
 		
         <TextView
         android:id="@+id/result_show_contants"
@@ -22,9 +22,24 @@
         
     </ScrollView>
     
+    
+    <EditText   
+        android:id="@+id/loop_count_edit"
+        android:layout_below="@+id/result_show_scroll"
+        android:layout_width="200dip"  
+        android:layout_height="23dip"  
+        android:padding="0dip"  
+        android:layout_margin="0dip"  
+        android:textColorHint="#AAAAAA"  
+        android:textSize="14dip"  
+        android:singleLine="true"  
+        android:inputType="number"
+        android:hint="请输入循环次数..."  
+    />  
+    
     <LinearLayout
         android:id="@+id/fill_scale"
-        android:layout_below="@+id/result_show_scroll"
+        android:layout_below="@+id/loop_count_edit"
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
          android:layout_height="wrap_content"
@@ -62,12 +77,12 @@
 	        android:text="@string/create_fragmentation_test" />
 
          <Button
-	        android:id="@+id/delete_fragmentation_random_test_btn"
+	        android:id="@+id/stop_test_btn"
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
 	        android:layout_weight="1"
 	        android:background="@drawable/button"
-	        android:text="@string/delete_fragmentation_random_test" />
+	        android:text="@string/stop_test" />
 	    <Button
 	        android:id="@+id/delete_fragmentation_all_test_btn"
 	        android:layout_height="wrap_content"
