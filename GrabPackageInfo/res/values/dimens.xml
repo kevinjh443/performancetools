@@ -6,5 +6,7 @@
     <dimen name="adapter_image_width">48dp</dimen>
     <dimen name="adapter_image_height">48dp</dimen>
     <dimen name="adapter_margin">8dp</dimen>
+    <dimen name="grid_view_column_width">80dp</dimen>
+    
 
 </resources>

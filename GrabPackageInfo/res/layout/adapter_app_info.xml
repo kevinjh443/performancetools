@@ -13,4 +13,11 @@
         android:layout_marginLeft="@dimen/adapter_margin"
         android:scaleType="fitCenter" />
 
+    <TextView
+        android:id="@+id/app_lable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/app_icon"
+        android:textSize="16dp" />
+
 </RelativeLayout>

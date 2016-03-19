@@ -2,11 +2,11 @@ package com.hogee.grabpackageinfo;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import com.hogee.grabpackageinfo.adapter.ChoiceAppListAdapter;
+import com.hogee.grabpackageinfo.data.AppInfo;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,7 +19,10 @@ import android.content.pm.ResolveInfo;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,14 +31,52 @@ public class ChoiceAppActivity extends Activity {
     
     private File mCurrentFile;
     private String TAG = "kevinjh";
-    private ListView mAppListView;
-
+    private GridView mAppGridView;
+    
+    private ArrayList<AppInfo> mAppInfoList = new ArrayList<AppInfo>();
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mAppListView = (ListView) findViewById(R.id.choice_app_list);
+        mAppGridView = (GridView) findViewById(R.id.choice_app_gview);
+        
+        initData();
+        
+        ChoiceAppListAdapter adapter = new ChoiceAppListAdapter(this);
+        adapter.setAppInfoListItems(mAppInfoList);
+        
+        mAppGridView.setAdapter(adapter);
+        //mAppGridView.setOnItemLongClickListener(mGridItemLongClickListener);
     }
+    
+    OnItemLongClickListener mGridItemLongClickListener = new OnItemLongClickListener() {
+
+		@Override
+		public boolean onItemLongClick(AdapterView<?> parent, View view,
+				int position, long id) {
+			Log.d(TAG, "position long clicked = "+position);
+			return false;
+		}
+	};
+    
+    private void initData() {
+    	mAppInfoList.clear();
+    	
+    	Intent localIntent = new Intent("android.intent.action.MAIN", null);
+    	localIntent.addCategory("android.intent.category.LAUNCHER");
+        ArrayList<ResolveInfo> localList = (ArrayList<ResolveInfo>) 
+        		ChoiceAppActivity.this.getApplicationContext().getPackageManager()
+        		.queryIntentActivities(localIntent, 0);
+        
+        for (ResolveInfo info : localList) {
+        	AppInfo appInfo = new AppInfo();
+        	appInfo.setmPackageName(info.activityInfo.packageName);
+        	appInfo.setmLauncherClassName(info.activityInfo.name);
+        	appInfo.setmIconResId(info.getIconResource());
+        	mAppInfoList.add(appInfo);
+        }
+	}
     
     View.OnClickListener mGrabListener = new View.OnClickListener() {
         
