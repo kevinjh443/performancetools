@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="grab_package_info_string">start grab packages info</string>
     <string name="grab_package_info_result">you can greb this device`s packages info...</string>
+    <string name="parse_packages_info">parse start</string>
 
 </resources>

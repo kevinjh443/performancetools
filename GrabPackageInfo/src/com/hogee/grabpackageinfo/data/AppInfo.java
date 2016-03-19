@@ -1,10 +1,17 @@
 package com.hogee.grabpackageinfo.data;
 
+import android.graphics.drawable.Drawable;
+
+/**
+ * 2016-3-19
+ * @author Kevin
+ *
+ */
 public class AppInfo {
     private String mPackageName;
     private String mLauncherClassName;
     private String mAppLableName;
-    private int mIconResId;
+    private Drawable mIconRes;
     private int mAppType;
     
     public int getmAppType() {
@@ -13,11 +20,11 @@ public class AppInfo {
 	public void setmAppType(int mAppType) {
 		this.mAppType = mAppType;
 	}
-	public int getmIconResId() {
-        return mIconResId;
+	public Drawable getmIconRes() {
+        return mIconRes;
     }
-    public void setmIconResId(int mIconResId) {
-        this.mIconResId = mIconResId;
+    public void setmIconRes(Drawable mIconRes) {
+        this.mIconRes = mIconRes;
     }
     public String getmPackageName() {
         return mPackageName;

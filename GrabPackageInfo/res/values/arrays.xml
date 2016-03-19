@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="choice_diff_type_item">
+        <item>high use app</item>
+        <item>mid use app</item>
+        <item>low use app</item>
+        <item>no use</item>
+        <item>PRINT</item>
+    </string-array>
+
+</resources>

@@ -13,6 +13,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * 2016-3-19
+ * @author Kevin
+ *
+ */
 public class ChoiceAppListAdapter extends BaseAdapter {
     
     private Context mContext;
@@ -60,12 +65,17 @@ public class ChoiceAppListAdapter extends BaseAdapter {
 			holder = (Holder) convertView.getTag();
 		}
         
-        holder.mLable.setText(mAppInfoList.get(position).getmPackageName());
-        holder.mIcon.setImageResource(mAppInfoList.get(position).getmIconResId());
+        holder.mLable.setText(mAppInfoList.get(position).getmAppLableName());
+        holder.mIcon.setImageDrawable(mAppInfoList.get(position).getmIconRes());
         
         return convertView;
     }
 
+    /**
+     * 
+     * @author Kevin
+     *
+     */
     class Holder {  
         private ImageView mIcon;  
         private TextView mLable;
