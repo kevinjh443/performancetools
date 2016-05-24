@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <info>
-	<version>version:3.0</version>
-	<apk_url>apk_url:https://github.com/kevinjh443/performancetools/PerfTracker/PerfTracker_3.0.apk</apk_url>
-	<description>description:检测到最新版本，请及时更新！</description>
-	<url_server>url_server:https://github.com/kevinjh443/performancetools/PerfTracker/upgrade_version.xml</url_server>
+	<version>version:[3.0]</version>
+	<apk_url>apk_url:[https://github.com/kevinjh443/performancetools/PerfTracker/PerfTracker_3.0.apk]</apk_url>
+	<description>description:[检测到最新版本，请及时更新！]</description>
+	<url_server>url_server:[https://github.com/kevinjh443/performancetools/PerfTracker/upgrade_version.xml]</url_server>
 </info>
