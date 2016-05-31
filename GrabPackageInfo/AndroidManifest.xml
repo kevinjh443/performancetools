@@ -26,6 +26,17 @@
             android:name="com.hogee.grabpackageinfo.ChoiceAppActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
+            
+        </activity>
+        
+        <activity
+            android:name="com.hogee.grabpackageinfo.ParseMoveActivity"
+            android:launchMode="singleTop"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Transparent"  
+            android:noHistory="true"  
+             >
+             
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
