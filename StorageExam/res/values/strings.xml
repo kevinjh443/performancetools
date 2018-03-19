@@ -16,12 +16,14 @@
         2，“create files” \n
         3，“delete files” \n\n</string>
         
-    <string name="exam_intr_easy">此工具用於在sdcard目錄下產生大量0B-2MB不等的隨機文件，
+    <string name="exam_intr_easy">此工具用於在sdcard目錄下產生大量１KB-4MB不等的隨機文件，
         然後随机刪除他們，循環此步驟，在手機中產生大量存儲設備碎片。\n
         步驟：\n
-        1, 填写循环次数（一次：create/随机delete一轮）\n
-        2，選定sdcard填充比例；\n
-        3，“Start“（create frag） \n
+        1, 设置屏幕never sleep, 本界面保持在打开状态。\n
+        2, 填写循环次数（一次：create/delete为一轮）\n
+        3，選定sdcard填充比例(最大95%)；\n
+        4, 选择删除文件的方式；\n
+        5，“Start“（初始化要等待约５sec） \n
         note: you can stop; delete all when you test ok \n\n</string>
     
 

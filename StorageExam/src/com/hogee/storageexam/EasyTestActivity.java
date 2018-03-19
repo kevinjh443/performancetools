@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -50,6 +51,11 @@ public class EasyTestActivity extends Activity {
     private TextView mDetailTextView;
     private TextView mResultTextView;
     private TextView mFillScaleTextView;
+    /** for choose delete type */
+    private RadioButton mDelAll;
+    private RadioButton mDelHalf;
+    private RadioButton mDelRandom;
+    private int mDelType = 0;
     /** the circle progress about how much filled of delete */
     private CircleProgress mProgressView;
     /** adjust the proportion of need fill data */
@@ -71,10 +77,10 @@ public class EasyTestActivity extends Activity {
     private int MAX_FILE_FOLDER_DEPTH = 10;
     private int MIN_FILE_FOLDER_DEPTH = 3;
     private int MAX_SUB_FILE_FOLDER = 5;
-    private int mBigLoopCount = 1;
-    private int mBigLoopCounter = 1;
+    private long mBigLoopCount = 1;
+    private long mBigLoopCounter = 1;
     /** the random bigest size */
-    private int mRandomSize = 1024*2048;
+    private int mRandomSize = 1024*1024*4;// 4MB
     
     private static final int CASE_CHECK_AVAIL = 0;
     private static final int CASE_CONTINUE_WRITE = 1;
@@ -116,6 +122,11 @@ public class EasyTestActivity extends Activity {
         
         mCreateFragmBtn = (Button) findViewById(R.id.create_fragmentation_test_btn);
         mCreateFragmBtn.setOnClickListener(mCreateFragmListener);
+        
+        mDelAll = (RadioButton) findViewById(R.id.delete_all);
+        mDelAll.setChecked(true);
+        mDelHalf = (RadioButton) findViewById(R.id.delete_half);
+        mDelRandom = (RadioButton) findViewById(R.id.delete_random);
         
         String state = Environment.getExternalStorageState(); 
         if(Environment.MEDIA_MOUNTED.equals(state)) {
@@ -162,7 +173,7 @@ public class EasyTestActivity extends Activity {
         
         @Override
         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-            if (i <= 95) {
+            if (i < 95) {//modified by kevin fix leak bug
                 mFillScale = i;
             } else {
                 mFillScale = 95;
@@ -219,13 +230,14 @@ public class EasyTestActivity extends Activity {
         }
         if (!isCreateFileThreadRunning) {
             DeleteFragmThread deleteFragmThread = new DeleteFragmThread();
-            deleteFragmThread.initDeleteFragmThread(DeleteFragmThread.TYPE_RANDOM_FRAG);
+            deleteFragmThread.initDeleteFragmThread(mDelType);//modified by kevin 20180319 for 老化 test
             deleteFragmThread.execute(100);
         }
         
     }
     
     private void workStartAgainJob() {
+        if (DEBUG) Log.d(TAG, "workStartAgainJob isCreateFileThreadRunning = "+isCreateFileThreadRunning);
         if (!isCreateFileThreadRunning) {
             initIntr();
             if (mCreateFragmThread == null) {
@@ -233,7 +245,9 @@ public class EasyTestActivity extends Activity {
                 mCreateFragmThread.execute(100);
             }
         } else {
-            
+            // add by kevin 
+            Toast.makeText(getApplicationContext(), "已经正在运行中了！",
+                    Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -264,7 +278,8 @@ public class EasyTestActivity extends Activity {
                 return;
             }
             try {
-                mBigLoopCount = Integer.valueOf(bigLoopCountTemp).intValue();
+                mBigLoopCount = Integer.valueOf(bigLoopCountTemp).longValue();
+                if (DEBUG) Log.d(TAG, "loop time value = "+mBigLoopCount);
             } catch (Exception e) {
                 
             }
@@ -274,6 +289,19 @@ public class EasyTestActivity extends Activity {
                         Toast.LENGTH_SHORT).show();
                 return;
             }
+            
+            if (mDelAll.isChecked()) {
+                mDelType = DeleteFragmThread.TYPE_DELETE_ALL;
+            } else if (mDelHalf.isChecked()) {
+                mDelType = DeleteFragmThread.TYPE_DELETE_HALF;
+            } else {
+                mDelType = DeleteFragmThread.TYPE_RANDOM_FRAG;
+            }
+            if (DEBUG) Log.d(TAG, "delete type is "+mDelType);
+            
+            //nothing here, not working
+            Toast.makeText(getApplicationContext(), "正在初始化数据，请等待，即将运行。。。",
+                    Toast.LENGTH_SHORT).show();
             
             if (!isCreateFileThreadRunning) {
                 initBufData();
@@ -334,6 +362,7 @@ public class EasyTestActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            if (DEBUG) Log.d(TAG, "check should create files again");
             mHandler.sendEmptyMessageDelayed(CASE_AUDO_AGAIN, 200);
         }
         
@@ -399,6 +428,12 @@ public class EasyTestActivity extends Activity {
                 Log.d(TAG, "set isCreateFileThreadRunning = flase!");
             }
             return null;
+        }
+        
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (DEBUG) Log.d(TAG, "CreateFragmThread onPostExecute");
         }
         
         /**
@@ -480,7 +515,7 @@ public class EasyTestActivity extends Activity {
                         mFileCounter++;
                     }
                     
-                    int fileSize = (int)(Math.random()*mRandomSize);//create random filesize 1KB - 2MB random
+                    int fileSize = (int)(Math.random()*mRandomSize);//create random filesize 1KB - 4MB random
                     Log.d(TAG, "random file size = "+(fileSize/1024) + "KB");
                     insertFileRandomData(file, fileSize);
                     Log.d(TAG, "random file real size = "+(file.length()/1024) + "KB");
@@ -517,6 +552,8 @@ public class EasyTestActivity extends Activity {
                 //    buf[i] = (byte) (Math.random() * 120);// byte -> value: 0 - 127
                 //}
                 if (FileSize >= 2097100) {
+                    FileSize = 1024;
+                } else if (FileSize < 1024) {// modified by kevin of 1k low limit
                     FileSize = 1024;
                 }
                 out.write(Arrays.copyOfRange(mBuf, 0, FileSize));
@@ -923,6 +960,7 @@ public class EasyTestActivity extends Activity {
                     mBigLoopCounter = 1;
                     mCreateFragmThread = null;
                 } else {
+                    mCreateFragmThread = null;// add by kevin fix bug 20180319
                     workStartAgainJob();
                 }
                 break;
